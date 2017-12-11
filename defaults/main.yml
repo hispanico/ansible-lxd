@@ -1,0 +1,19 @@
+---
+
+
+# LXD Profiles
+lxd_profiles:
+  - name: default
+    description: "Default LXD Profile"
+    status: present
+
+# LXD Containers
+LXCs:
+  - name: mycontainer
+    mode: pull
+    server: https://cloud-images.ubuntu.com/releases
+    alias: "16.04"
+    protocol: simplestreams
+    architecture: x86_64
+    profile: default
+    status: started

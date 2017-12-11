@@ -1,0 +1,58 @@
+---
+
+- name: Create a profile
+  lxd_profile:
+    url: "{{ item.lxd_url | default('unix:/var/snap/lxd/common/lxd/unix.socket') }}"
+    name: "{{ item.name }}"
+    state: "{{ item.status }}"
+    config:
+      user.user-data: |
+        {{ item.cloud_init | default ('') }}
+    description: "{{ item.description }}"
+    devices:
+      root:
+        path: /
+        pool: "{{ item.storage_pool | default ('default') }}"
+        type: "{{ item.disk_type | default ('disk') }}"
+      eth0:
+        nictype: "{{ item.nictype | default ('bridged') }}"
+        parent: "{{ item.network | default ('lxdbr0') }}"
+        type: "{{ item.interface_type | default ('nic') }}"
+  with_items:
+    - "{{ lxd_profiles }}"
+  tags:
+    - lxd
+    - lxd-profiles
+
+- name: Deploy Containers
+  lxd_container:
+    url: "{{ item.lxd_url | default('unix:/var/snap/lxd/common/lxd/unix.socket') }}"
+    name: "{{ item.name }}"
+    state: "{{ item.status }}"
+    source:
+      type: image
+      mode: "{{ item.mode | default () }}"
+      server: "{{ item.server | default () }}"
+      protocol: "{{ item.protocol | default ('lxd') }}"
+      alias: "{{ item.alias }}"
+      architecture: "{{ item.architecture | default () }}"
+    profiles: ["{{ item.profile | default ('default') }}"]
+    config:
+      limits.memory: "{{ item.memory | default () }}"
+    devices:
+      root:
+        path: /
+        pool: "{{ item.storage_pool | default ('default') }}"
+        size: "{{ item.disk_space | default () }}"
+        type: "{{ item.disk_type | default ('disk') }}"
+      eth0:
+        nictype: "{{ item.nictype | default ('bridged') }}"
+        parent: "{{ item.network | default ('lxdbr0') }}"
+        type: "{{ item.interface_type | default ('nic') }}"
+        ipv4.address: "{{ item.ipv4address | default () }}"
+    wait_for_ipv4_addresses: true
+    timeout: 600
+  with_items: "{{ LXCs }}"
+  tags:
+    - lxd
+    - lxd-containers
