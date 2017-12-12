@@ -21,23 +21,24 @@ install:
   - sudo snap install lxd
 
   # Run LXD init
-  - cat <<EOF | sudo /snap/bin/lxd init --preseed
-  # Daemon settings
-  config:
-    images.auto_update_interval: 6
-
-  # Storage pools
-  storage_pools:
-  - name: default
-    driver: dir
-
-  networks:
-  - name: lxdbr0
-    type: bridge
+  - >
+    cat <<EOF | sudo /snap/bin/lxd init --preseed
+    # Daemon settings
     config:
-      ipv4.address: auto
-      ipv6.address: auto
-  EOF
+      images.auto_update_interval: 6
+
+    # Storage pools
+    storage_pools:
+    - name: default
+      driver: dir
+
+    networks:
+    - name: lxdbr0
+      type: bridge
+      config:
+        ipv4.address: auto
+        ipv6.address: auto
+    EOF
 
   # Install ansible
   - pip install ansible
@@ -65,7 +66,9 @@ script:
 
   # Check for role is done
   - sudo lxc profile list
+  - sudo lxc network list
   - sudo lxc list
+
 
 notifications:
   webhooks: https://galaxy.ansible.com/api/v1/notifications/
