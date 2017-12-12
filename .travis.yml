@@ -2,44 +2,13 @@
 language: python
 python: "2.7"
 
-sudo: required
-dist: trusty
-
 # Install ansible
 addons:
   apt:
     packages:
     - python-pip
-    - snapd
-    - squashfuse
 
 install:
-  # Remove packaged version of LXD
-  - sudo apt-get purge lxd lxd-client
-
-  # Install LXD from snapd
-  - sudo snap install lxd
-
-  # Run LXD init
-  - >
-    cat <<EOF | sudo /snap/bin/lxd init --preseed
-    # Daemon settings
-    config:
-      images.auto_update_interval: 6
-
-    # Storage pools
-    storage_pools:
-    - name: default
-      driver: dir
-
-    networks:
-    - name: lxdbr0
-      type: bridge
-      config:
-        ipv4.address: auto
-        ipv6.address: auto
-    EOF
-
   # Install ansible
   - pip install ansible
 
@@ -53,21 +22,6 @@ script:
 
   # Basic role syntax check
   - ansible-playbook tests/test.yml -i tests/inventory --syntax-check
-
-  # Run the role/playbook with ansible-playbook
-  - ansible-playbook tests/test.yml -i tests/inventory --connection=local --become
-
-  # Run the role/playbook again, checking to make sure it's idempotent
-  - >
-    ansible-playbook tests/test.yml -i tests/inventory --connection=local --become
-    | grep -q 'changed=0.*failed=0'
-    && (echo 'Idempotence test: pass' && exit 0)
-    || (echo 'Idempotence test: fail' && exit 1)
-
-  # Check for role is done
-  - sudo lxc profile list
-  - sudo lxc network list
-  - sudo lxc list
 
 
 notifications:
