@@ -1,5 +1,7 @@
 ansible-lxd
 =========
+[![Build Status](https://img.shields.io/travis/hispanico/ansible-lxd.svg?style=flat-square)](https://travis-ci.org/hispanico/ansible-lxd)
+[![Galaxy](https://img.shields.io/badge/galaxy-hispanico.lxd-blue.svg?style=flat-square)](https://galaxy.ansible.com/hispanico/lxd/)
 
 This role manages LXD Profiles and LXD Containers on a remote LXD Server. https://linuxcontainers.org/lxd/
 
