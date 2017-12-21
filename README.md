@@ -140,6 +140,7 @@ The following example will configure a default LXD profile with the cloud-init o
           architecture: x86_64
           disk_space: 50GB          # Container's Disk limit
           memory: 2GB               # Container's Memory limit
+          nesting: "true"           # Container's security.nesting enabled
           storage_pool: default
           network: lxdbr0
           ipv4address: 10.0.0.3     # static IPv4 address according with lxdbr0 subnet

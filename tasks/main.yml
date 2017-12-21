@@ -39,6 +39,7 @@
     profiles: ["{{ item.profile | default ('default') }}"]
     config:
       limits.memory: "{{ item.memory | default () }}"
+      security.nesting: "{{ item.nesting | default () }}"
     devices:
       root:
         path: /
