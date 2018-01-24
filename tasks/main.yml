@@ -51,7 +51,7 @@
         parent: "{{ item.network | default ('lxdbr0') }}"
         type: "{{ item.interface_type | default ('nic') }}"
         ipv4.address: "{{ item.ipv4address | default () }}"
-    wait_for_ipv4_addresses: true
+    wait_for_ipv4_addresses: "{{ item.wait_for_ipv4_addresses | default ('false') }}"
     timeout: 600
   with_items: "{{ LXCs }}"
   tags:
